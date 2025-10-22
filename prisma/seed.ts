@@ -1,4 +1,5 @@
 import { PrismaClient } from "../src/app/_generated/prisma/index.js";
+import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
@@ -8,7 +9,33 @@ async function main() {
   await prisma.book.deleteMany();
   await prisma.author.deleteMany();
   await prisma.genre.deleteMany();
+  await prisma.user.deleteMany();
 
+  const passwordAdmin = await bcrypt.hash("admin123", 10);
+  const passwordUser = await bcrypt.hash("user123", 10);
+  const passwordGuest = await bcrypt.hash("guest123", 10);
+
+  const users = await prisma.user.createMany({
+    data: [
+      {
+        email: "admin@example.com",
+        hashedPassword: passwordAdmin,
+        role: "ADMIN",
+      },
+      {
+        email: "user@example.com",
+        hashedPassword: passwordUser,
+        role: "USER",
+      },
+      {
+        email: "guest@example.com",
+        hashedPassword: passwordGuest,
+        role: "GUEST",
+      },
+    ],
+  });
+
+  console.log(`${users.count} users created.`);
   const authors = await prisma.author.createMany({
     data: [
       { title: "George Orwell" },
