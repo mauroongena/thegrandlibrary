@@ -44,6 +44,27 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  
+  callbacks: {
+      // This adds the userId to the session data so we can use it on client (useSession) and server (getServerSession)
+      session: async ({ session, token }) => {
+        const user = await prisma.user.findUnique({
+          where: { email: session?.user?.email ?? undefined },
+        });
+        if (user?.id) {
+          session.role = user?.role;
+        }
+        return session;
+      },
+      // This adds the user's role to the token data so we can use it in middleware
+      jwt: async ({ token, user }) => {
+        if (user && "role" in user && user.role) {
+          token.role = user.role;
+        }
+ 
+        return token;
+      },
+    },
 }
 
 const handler = NextAuth(authOptions);
