@@ -1,15 +1,15 @@
 "use client";
-
 import { useState } from "react";
 
 interface AddToWishlistButtonProps {
   bookId: number;
   userEmail: string;
+  initiallyAdded?: boolean;
 }
 
-export default function AddToWishlistButton({ bookId, userEmail }: AddToWishlistButtonProps) {
+export default function AddToWishlistButton({ bookId, userEmail, initiallyAdded = false }: AddToWishlistButtonProps) {
   const [loading, setLoading] = useState(false);
-  const [added, setAdded] = useState(false);
+  const [added, setAdded] = useState(initiallyAdded);
 
   async function handleAdd() {
     setLoading(true);
@@ -66,12 +66,7 @@ export default function AddToWishlistButton({ bookId, userEmail }: AddToWishlist
             viewBox="0 0 24 24"
           >
             <circle cx="12" cy="12" r="10" strokeWidth="4" className="opacity-25" />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="4"
-              d="M4 12a8 8 0 018-8"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M4 12a8 8 0 018-8" />
           </svg>
           Adding...
         </>

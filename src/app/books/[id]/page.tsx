@@ -18,14 +18,27 @@ export default async function BookPage({ params }: BookPageProps) {
     where: { id: Number(id) },
     include: {
       genres: {
-        include: {
-          genre: true,
-        },
+        include: { genre: true },
       },
+      author: {
+        include: { author: true },
+      },
+      wishlist: session?.user?.email
+        ? {
+            where: { user: { email: session.user.email } },
+          }
+        : undefined,
     },
   });
 
   if (!book) return notFound();
+
+  const isInWishlist = !!book.wishlist?.length;
+
+  const authorNames =
+    book.author.length > 0
+      ? book.author.map((a) => a.author.title).join(", ")
+      : "Unknown author";
 
   const genreNames = book.genres.map((g) => g.genre.title);
 
@@ -57,6 +70,11 @@ export default async function BookPage({ params }: BookPageProps) {
             <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-4">
               {book.title}
             </h1>
+
+            <p className="text-lg text-gray-300 mb-2">
+              <span className="font-semibold text-blue-400">Author(s): </span>
+              {authorNames}
+            </p>
 
             <div className="inline-flex items-center gap-2 bg-blue-500/20 text-blue-400 border border-blue-500/30 px-4 py-2 rounded-full">
               <svg
@@ -220,7 +238,11 @@ export default async function BookPage({ params }: BookPageProps) {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-end mt-8 pt-6 border-t border-gray-700">
             {session?.user && (
-              <AddToWishlistButton bookId={book.id} userEmail={session.user.email!} />
+              <AddToWishlistButton
+                bookId={book.id}
+                userEmail={session.user.email!}
+                initiallyAdded={isInWishlist} 
+              />
             )}
 
             <Link
@@ -244,7 +266,7 @@ export default async function BookPage({ params }: BookPageProps) {
             </Link>
 
             <Link
-              href={`/books/edit/${book.id}`}
+              href={`/books/${book.id}/edit`}
               className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 hover:transform hover:-translate-y-0.5"
             >
               <svg
