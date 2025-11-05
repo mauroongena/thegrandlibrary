@@ -1,6 +1,11 @@
 import CountUp from "./animations/CountUp";
 import prisma from "@/lib/client";
 import Link from "next/link";
+import SearchBar from "@/app/components/SearchBar";
+
+interface SearchParams {
+  searchParams?: { query?: string };
+}
 
 export default async function Home() {
   const totalBooks = await prisma.book.count();
@@ -74,16 +79,6 @@ export default async function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 22V12h6v10" />
                 </svg>
                 View All Books
-              </Link>
-
-              <Link 
-                href="/books/new"
-                className="inline-flex items-center justify-center gap-3 bg-gray-700 hover:bg-gray-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg hover:shadow-gray-500/10 hover:transform hover:-translate-y-1 border border-gray-600"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                Add New Book
               </Link>
             </div>
           </div>

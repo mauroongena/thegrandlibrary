@@ -21,6 +21,7 @@ model User {
   email          String  @unique
   hashedPassword String
   role           Role 
+  wishlist  Wishlist[]
 }
 
 model Book {
@@ -32,6 +33,7 @@ model Book {
   author      AuthorBook[]
   publisher   String?
   genres      BookGenre[]
+  wishlist    Wishlist[]
 }
 
 model Genre {
@@ -64,4 +66,16 @@ model AuthorBook {
   book   Book   @relation(fields: [bookId], references: [id])
 
   @@id([authorId, bookId])
+}
+
+model Wishlist {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  bookId    Int
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+  book      Book     @relation(fields: [bookId], references: [id])
+
+  @@unique([userId, bookId])
 }

@@ -2,9 +2,23 @@ import prisma from '@/lib/client';
 import Link from 'next/link';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import SearchBar from "@/app/components/SearchBar";
 
-export default async function Books() {
-    const books = await prisma.book.findMany();
+interface SearchParams {
+    searchParams?: { query?: string };
+}
+export default async function Books({ searchParams }: SearchParams) {
+    const resolvedParams = await searchParams;
+    const query = resolvedParams?.query ?? "";
+    
+    const books = await prisma.book.findMany({
+        where: query ? {
+            OR: [
+                { title: { contains: query } },
+                { publisher: { contains: query } },
+            ]
+        } : undefined
+    });
     const session = await getServerSession(authOptions);
     const isAdmin = session?.role === "ADMIN";
     
@@ -31,8 +45,9 @@ export default async function Books() {
                             Add Book
                         </Link>
                     )}
-
                 </div>
+
+                <SearchBar />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {books.map((book) => (
