@@ -12,6 +12,7 @@ export default async function NewBookPage() {
 
   const title = formData.get("title");
   const description = formData.get("description");
+  const image = formData.get("image");
   const pages = formData.get("pages");
   const year = formData.get("year");
   const publisher = formData.get("publisher");
@@ -29,6 +30,7 @@ export default async function NewBookPage() {
     data: {
       title: title as string,
       description: (description as string) || null,
+      image: (image as string) || null,
       pages: pages ? Number(pages) : null,
       year: year ? Number(year) : null,
       publisher: publisher as string,

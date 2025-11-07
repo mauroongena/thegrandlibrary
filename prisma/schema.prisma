@@ -22,18 +22,21 @@ model User {
   hashedPassword String
   role           Role 
   wishlist  Wishlist[]
+  ratings  Rating[]
 }
 
 model Book {
   id          Int      @id @default(autoincrement())
   title       String
   description String?
+  image       String? 
   pages       Int?
   year        Int?
   author      AuthorBook[]
   publisher   String?
   genres      BookGenre[]
   wishlist    Wishlist[]
+  ratings  Rating[]
 }
 
 model Genre {
@@ -76,6 +79,21 @@ model Wishlist {
 
   user      User     @relation(fields: [userId], references: [id])
   book      Book     @relation(fields: [bookId], references: [id])
+
+  @@unique([userId, bookId])
+}
+
+model Rating {
+  id        Int      @id @default(autoincrement())
+  value     Int      
+  review    String? 
+  createdAt DateTime @default(now())
+
+  user   User @relation(fields: [userId], references: [id])
+  userId String
+
+  book   Book @relation(fields: [bookId], references: [id])
+  bookId Int
 
   @@unique([userId, bookId])
 }

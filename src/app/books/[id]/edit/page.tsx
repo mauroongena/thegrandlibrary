@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { use } from "react";
+import Image from "next/image";
 
 interface EditBookProps {
   params: Promise<{ id: string }>;
@@ -21,6 +22,7 @@ interface BookAuthor {
 interface BookData {
   id: number;
   title: string;
+  image?: string;
   publisher?: string;
   pages?: number;
   year?: number;
@@ -45,6 +47,7 @@ export default function EditBookPage({ params }: EditBookProps) {
 
   const [book, setBook] = useState<BookData | null>(null);
   const [title, setTitle] = useState("");
+  const [image, setImage] = useState("");
   const [publisher, setPublisher] = useState("");
   const [pages, setPages] = useState<number | undefined>();
   const [year, setYear] = useState<number | undefined>();
@@ -71,6 +74,7 @@ export default function EditBookPage({ params }: EditBookProps) {
 
       setBook(bookData.book);
       setTitle(bookData.book.title);
+      setImage(bookData.book.image || "");
       setPublisher(bookData.book.publisher || "");
       setPages(bookData.book.pages);
       setYear(bookData.book.year);
@@ -136,7 +140,14 @@ export default function EditBookPage({ params }: EditBookProps) {
   const removeGenre = (genreId: number) => {
     setGenreIds(genreIds.filter((id) => id !== genreId));
   };
-
+  const isAllowedImage = (url: string) => {
+  try {
+    const { hostname } = new URL(url);
+    return hostname === "cdn.standaardboekhandel.be";
+  } catch {
+    return false;
+  }
+};
   return (
     <div className="p-6 text-white">
       <h1 className="text-3xl font-bold mb-6">Edit Book</h1>
@@ -149,6 +160,31 @@ export default function EditBookPage({ params }: EditBookProps) {
             onChange={(e) => setTitle(e.target.value)}
             className="w-full p-2 rounded bg-gray-800 border border-gray-700"
           />
+        </div>
+        <div className="flex flex-col">
+          <label className="mb-1 font-semibold text-gray-300">Image</label>
+          <input
+            type="text"
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+            className="w-full p-2 rounded bg-gray-800 border border-gray-700"
+          />
+        </div>
+        <div className="flex flex-col">
+          <label className="mb-1 font-semibold text-gray-300">Image preview</label>
+          {image && isAllowedImage(image) ? (
+            <Image
+              src={image}
+              alt={title}
+              width={150}
+              height={200}
+              className="w-36 h-48 object-cover rounded"
+            />
+          ) : (
+            <div className="w-36 h-48 bg-gray-700 flex items-center justify-center rounded">
+              <span className="text-gray-400 text-sm">No Image</span>
+            </div>
+          )}
         </div>
         <div className="flex flex-col">
           <label className="mb-1 font-semibold text-gray-300">Publisher</label>

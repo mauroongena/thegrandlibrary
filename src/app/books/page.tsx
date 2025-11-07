@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import SearchBar from "@/app/components/SearchBar";
+import Image from "next/image";
 
 interface SearchParams {
     searchParams?: { query?: string };
@@ -50,44 +51,70 @@ export default async function Books({ searchParams }: SearchParams) {
                 <SearchBar />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {books.map((book) => (
-                            <div 
-                                key={book.id}
-                                className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6 hover:border-blue-500/30 transition-all duration-300 hover:transform hover:-translate-y-1 shadow-lg hover:shadow-blue-500/10"
-                            >
-                                <Link
-                                    href={`/books/${book.id}`}
-                                    className="text-blue-600"
-                                    >
-                                    <h3 className="text-xl font-semibold text-blue-400 mb-3 line-clamp-2">
-                                        {book.title}
-                                    </h3>
-                                    
-                                    <div className="space-y-2 text-gray-300">
-                                        <div className="flex items-center gap-2">
-                                            <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                            </svg>
-                                            <span className="text-sm">{book.publisher}</span>
-                                        </div>
-                                        
-                                        <div className="flex items-center gap-2">
-                                            <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                            </svg>
-                                            <span className="text-sm">{book.year}</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="mt-4">
-                                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400 border border-blue-500/30">
-                                            Available
-                                        </span>
-                                    </div>
-                                    </Link>
+                    {books.map((book) => (
+                        <div
+                            key={book.id}
+                            className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6 hover:border-blue-500/30 transition-all duration-300 hover:transform hover:-translate-y-1 shadow-lg hover:shadow-blue-500/10"
+                        >
+                            <Link href={`/books/${book.id}`} className="text-blue-600">
+                                <div className="w-full h-70 bg-gray-700/30 rounded-xl overflow-hidden mb-4 flex items-center justify-center">
+                                    {book.image ? (
+                                    <Image
+                                        src={book.image}
+                                        alt={book.title}
+                                        width={100}
+                                        height={100}
+                                        className="object-cover w-full h-full"
+                                    />
+                                    ) : (
+                                    <div className="text-gray-500 text-sm">No Image</div>
+                                    )}
                                 </div>
-                        ))}
-                </div>
+                                <h3 className="text-xl font-semibold text-blue-400 mb-3 line-clamp-2">
+                                    {book.title}
+                                </h3>
+                                <div className="space-y-2 text-gray-300">
+                                    <div className="flex items-center gap-2">
+                                        <svg
+                                            className="w-4 h-4 text-blue-500"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                                            />
+                                        </svg>
+                                        <span className="text-sm">{book.publisher}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                    <svg
+                                        className="w-4 h-4 text-blue-500"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"                                            strokeWidth={2}
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                        />
+                                    </svg>
+                                    <span className="text-sm">{book.year}</span>
+                                    </div>
+                                </div>
+                                <div className="mt-4">
+                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                                    Available
+                                    </span>
+                                </div>
+                            </Link>
+                        </div>
+                    ))}
+            </div>
 
                 {books.length === 0 && (
                     <div className="text-center py-12">

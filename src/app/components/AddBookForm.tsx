@@ -64,6 +64,19 @@ export default function AddBookForm({
             />
           </Flex>
 
+          <Flex direction="column" gap="2">
+            <Text as="label" size="3" className="text-blue-400">
+              Book Image <span className="text-red-400">*</span>
+            </Text>
+            <TextField.Root
+              placeholder="Enter book image link..."
+              name="image"
+              required
+              size="3"
+              className="bg-gray-700/50 border-gray-600 focus:border-blue-500 transition-colors"
+            />
+          </Flex>
+          
           <Flex gap="4" direction={{ initial: "column", sm: "row" }}>
             <Flex direction="column" gap="2" className="flex-1">
               <Text as="label" size="3" className="text-blue-400">

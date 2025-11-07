@@ -1,5 +1,7 @@
 import prisma from "@/lib/client";
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function GET(req: NextRequest) {
   try {
@@ -72,6 +74,33 @@ export async function PUT(req: NextRequest) {
     console.error("Error updating book:", err);
     return NextResponse.json(
       { error: "Failed to update book" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const session = await getServerSession(authOptions);
+
+  if (!session || session.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+  }
+
+  const bookId = Number(params.id);
+
+  try {
+    await prisma.book.delete({
+      where: { id: bookId },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting book:", error);
+    return NextResponse.json(
+      { error: "Failed to delete book" },
       { status: 500 }
     );
   }
