@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
 
 export default function StarRating({ initialValue, bookId }: { initialValue: number; bookId: number }) {
+  const router = useRouter();
   const [rating, setRating] = useState(initialValue);
   const [hover, setHover] = useState(0);
 
@@ -12,6 +14,7 @@ export default function StarRating({ initialValue, bookId }: { initialValue: num
       method: "POST",
       body: JSON.stringify({ bookId, value }),
     });
+    router.refresh();
   };
 
   return (

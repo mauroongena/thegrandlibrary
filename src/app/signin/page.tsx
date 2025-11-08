@@ -3,6 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export default function SignInPage() {
   const searchParams = useSearchParams();
@@ -82,6 +83,13 @@ export default function SignInPage() {
             Sign In
           </button>
         </form>
+
+        <p className="mt-6 text-center text-gray-400">
+          Don&apos;t have an account yet?{' '}
+          <Link href="/register" className="text-blue-400 hover:text-blue-300 hover:underline">
+            Register here
+          </Link>
+        </p>
       </div>
     </div>
   );

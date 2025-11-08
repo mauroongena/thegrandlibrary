@@ -4,26 +4,39 @@ import { NextResponse } from "next/server";
 const adminRoutePatterns = [
   /^\/books\/new$/,
   /^\/books\/[^/]+\/edit$/,
-  /^\/admin\/loans/, 
+  /^\/admin\/loans/,
 ];
 
-export default withAuth(function middleware(req) {
-  const { pathname } = req.nextUrl;
+export default withAuth(
+  function middleware(req) {
+    const { pathname } = req.nextUrl;
 
-  if (!req.nextauth?.token?.role) {
-    return NextResponse.redirect(new URL("/api/auth/signin", req.url));
-  }
+    const publicBookPages = /^\/books(\/\d+)?$/;
 
-  if (req.nextauth.token.role === "USER") {
-    const isAdminRoute = adminRoutePatterns.some((pattern) =>
-      pattern.test(pathname)
-    );
+    if (!req.nextauth?.token?.role) {
+      if (publicBookPages.test(pathname)) {
+        return NextResponse.next();
+      }
 
-    if (isAdminRoute) {
-      return NextResponse.redirect(new URL("/api/auth/error", req.url));
+      return NextResponse.redirect(new URL("/api/auth/signin", req.url));
     }
+
+    if (req.nextauth.token.role === "USER") {
+      const isAdminRoute = adminRoutePatterns.some((pattern) =>
+        pattern.test(pathname)
+      );
+
+      if (isAdminRoute) {
+        return NextResponse.redirect(new URL("/api/auth/error", req.url));
+      }
+    }
+  },
+  {
+    callbacks: {
+      authorized: () => true,
+    },
   }
-});
+);
 
 export const config = {
   matcher: ["/books/:path*", "/api/auth/:path*", "/admin/:path*"],

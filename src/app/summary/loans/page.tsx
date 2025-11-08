@@ -56,7 +56,7 @@ export default async function MyLoansPage() {
               <div
                 key={loan.id}
                 className={`border rounded-xl p-4 shadow-sm ${
-                  overdue ? "border-red-500 bg-red-50" : "border-gray-200"
+                  overdue ? "border-red-500" : "border-gray-200"
                 }`}
               >
                 <div className="flex justify-between items-center">

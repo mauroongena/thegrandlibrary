@@ -30,12 +30,12 @@ export default function RegisterPage() {
     }
 
     return (
-<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black p-4">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black p-4">
             <form 
                 action={createUser}
                 className="w-full max-w-md bg-gray-800/50 backdrop-blur-md rounded-2xl border border-gray-700 p-8 shadow-2xl hover:shadow-blue-500/10 transition-shadow duration-500"
             >
-$                <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-8 text-center">
+                <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-8 text-center">
                     Create Your Account
                 </h2>
 
