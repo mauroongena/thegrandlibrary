@@ -23,6 +23,7 @@ model User {
   role           Role 
   wishlist  Wishlist[]
   ratings  Rating[]
+  loans    Loan[]
 }
 
 model Book {
@@ -37,6 +38,7 @@ model Book {
   genres      BookGenre[]
   wishlist    Wishlist[]
   ratings  Rating[]
+  loans      Loan[]
 }
 
 model Genre {
@@ -96,4 +98,16 @@ model Rating {
   bookId Int
 
   @@unique([userId, bookId])
+}
+
+model Loan {
+  id         Int      @id @default(autoincrement())
+  userId     String
+  bookId     Int
+  loanedAt   DateTime @default(now())
+  dueAt      DateTime?
+  returnedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+  book Book @relation(fields: [bookId], references: [id])
 }

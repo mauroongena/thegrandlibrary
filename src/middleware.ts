@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 const adminRoutePatterns = [
   /^\/books\/new$/,
   /^\/books\/[^/]+\/edit$/,
+  /^\/admin\/loans/, 
 ];
 
 export default withAuth(function middleware(req) {
@@ -25,5 +26,5 @@ export default withAuth(function middleware(req) {
 });
 
 export const config = {
-  matcher: ["/books/:path*", "/api/auth/:path*"],
+  matcher: ["/books/:path*", "/api/auth/:path*", "/admin/:path*"],
 };

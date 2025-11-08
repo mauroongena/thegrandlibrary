@@ -34,6 +34,15 @@ export default async function Navbar() {
             </Link>
           )}
 
+          {isAdmin && (
+            <Link
+              href="/admin/loans"
+              className="hover:text-blue-400 transition-colors duration-200"
+            >
+              Loans
+            </Link>
+          )}
+
           {session && (
             <Link
               href="/wishlist"
