@@ -107,6 +107,7 @@ model Loan {
   loanedAt   DateTime @default(now())
   dueAt      DateTime?
   returnedAt DateTime?
+  extendedOnce Boolean  @default(false)
 
   user User @relation(fields: [userId], references: [id])
   book Book @relation(fields: [bookId], references: [id])
