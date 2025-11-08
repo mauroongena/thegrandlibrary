@@ -286,39 +286,11 @@ export default async function BookPage({ params }: BookPageProps) {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-end mt-8 pt-6 border-t border-gray-700">
-          {session?.user && (
-            <AddToWishlistButton
-              bookId={book.id}
-              userEmail={session.user.email!}
-              initiallyAdded={isInWishlist} 
-            />
-          )}
-
-          <Link
-            href="/books"
-            className="inline-flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-gray-500/10 border border-gray-600"
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-              />
-            </svg>
-            Back to Collection
-          </Link>
-
-          {isAdmin && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-gray-700">
+          <div className="w-full sm:w-auto flex justify-start">
             <Link
-              href={`/books/${book.id}/edit`}
-              className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5"
+              href="/books"
+              className="inline-flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-gray-500/10 border border-gray-600"
             >
               <svg
                 className="w-4 h-4"
@@ -330,13 +302,46 @@ export default async function BookPage({ params }: BookPageProps) {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
               </svg>
-              Edit Book
+              Back to Collection
             </Link>
-          )}
-          {isAdmin && <DeleteBookButton bookId={book.id} />}
+          </div>
+
+          <div className="w-full sm:w-auto flex justify-start sm:justify-end items-center gap-4">
+            {session?.user && (
+              <AddToWishlistButton
+                bookId={book.id}
+                userEmail={session.user.email!}
+                initiallyAdded={isInWishlist}
+              />
+            )}
+
+            {isAdmin && (
+              <Link
+                href={`/books/${book.id}/edit`}
+                className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+                Edit Book
+              </Link>
+            )}
+
+            {isAdmin && <DeleteBookButton bookId={book.id} />}
+          </div>
         </div>
       </div>
     </div>

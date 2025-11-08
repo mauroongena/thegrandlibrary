@@ -27,7 +27,7 @@ export default async function WishlistPage() {
           },
           genres: {
             include: { genre: true },
-          },
+          }
         },
       },
     },

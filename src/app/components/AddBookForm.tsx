@@ -8,6 +8,7 @@ import {
   Card,
 } from "@radix-ui/themes";
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 
 export default function AddBookForm({
@@ -19,6 +20,16 @@ export default function AddBookForm({
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authors, setAuthors] = useState<string[]>([""]);
+  const [imageUrl, setImageUrl] = useState("");
+
+  const isAllowedImage = (url: string) => {
+    try {
+      const { hostname } = new URL(url);
+      return hostname === "cdn.standaardboekhandel.be";
+    } catch {
+      return false;
+    }
+  };
 
   const handleAddAuthor = () => setAuthors([...authors, ""]);
   const handleAuthorChange = (index: number, value: string) => {
@@ -73,8 +84,23 @@ export default function AddBookForm({
               name="image"
               required
               size="3"
+              value={imageUrl}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setImageUrl(e.target.value)}
               className="bg-gray-700/50 border-gray-600 focus:border-blue-500 transition-colors"
             />
+
+            <div className="mt-3">
+              <label className="mb-1 font-semibold text-gray-300">Image preview</label>
+              {imageUrl && isAllowedImage(imageUrl) ? (
+                <div className="w-36 h-48 overflow-hidden rounded">
+                  <Image src={imageUrl} alt="Preview" width={150} height={200} className="object-cover w-full h-full rounded" />
+                </div>
+              ) : (
+                <div className="w-36 h-48 bg-gray-700 flex items-center justify-center rounded">
+                  <span className="text-gray-400 text-sm">No Image</span>
+                </div>
+              )}
+            </div>
           </Flex>
           
           <Flex gap="4" direction={{ initial: "column", sm: "row" }}>

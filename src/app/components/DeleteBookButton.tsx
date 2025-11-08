@@ -12,7 +12,7 @@ export default function DeleteBookButton({ bookId }: { bookId: number }) {
 
     setLoading(true);
     try {
-      const res = await fetch(`/books/${bookId}`, {
+      const res = await fetch(`/api/book?id=${bookId}`, {
         method: "DELETE",
       });
 

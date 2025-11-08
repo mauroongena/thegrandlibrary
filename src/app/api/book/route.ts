@@ -79,28 +79,41 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  const session = await getServerSession(authOptions);
-
-  if (!session || session.role !== "ADMIN") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
-
-  const bookId = Number(params.id);
-
+export async function DELETE(request: NextRequest) {
   try {
-    await prisma.book.delete({
-      where: { id: bookId },
-    });
+    const session = await getServerSession(authOptions);
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (session.role !== "ADMIN") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const idParam = searchParams.get("id");
+    if (!idParam) {
+      return NextResponse.json({ error: "Missing book id" }, { status: 400 });
+    }
+
+    const bookId = Number(idParam);
+    if (isNaN(bookId)) {
+      return NextResponse.json({ error: "Invalid book id" }, { status: 400 });
+    }
+
+    await prisma.authorBook.deleteMany({ where: { bookId } });
+    await prisma.bookGenre.deleteMany({ where: { bookId } });
+    await prisma.wishlist.deleteMany({ where: { bookId } });
+    await prisma.rating.deleteMany({ where: { bookId } });
+    await prisma.loan.deleteMany({ where: { bookId } });
+
+    await prisma.book.delete({ where: { id: bookId } });
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting book:", error);
     return NextResponse.json(
-      { error: "Failed to delete book" },
+      { error: "An unexpected error occurred while deleting the book" },
       { status: 500 }
     );
   }

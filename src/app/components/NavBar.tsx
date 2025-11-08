@@ -24,24 +24,12 @@ export default async function Navbar() {
           >
             Books
           </Link>
-
-          {isAdmin && (
-            <Link
-              href="/books/new"
-              className="hover:text-blue-400 transition-colors duration-200"
-            >
-              New Book
-            </Link>
-          )}
-
-          {isAdmin && (
-            <Link
-              href="/admin/loans"
-              className="hover:text-blue-400 transition-colors duration-200"
-            >
-              Loans
-            </Link>
-          )}
+          <Link
+            href="/about"
+            className="hover:text-blue-400 transition-colors duration-200"
+          >
+            About
+          </Link>
 
           {session && (
             <Link
@@ -58,6 +46,24 @@ export default async function Navbar() {
               className="hover:text-blue-400 transition-colors duration-200"
             >
               Wishlist
+            </Link>
+          )}
+
+          {isAdmin && (
+            <Link
+              href="/books/new"
+              className="hover:text-blue-400 transition-colors duration-200"
+            >
+              New Book
+            </Link>
+          )}
+
+          {isAdmin && (
+            <Link
+              href="/admin/loans"
+              className="hover:text-blue-400 transition-colors duration-200"
+            >
+              Loans
             </Link>
           )}
 

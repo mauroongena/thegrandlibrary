@@ -149,9 +149,13 @@ export default function EditBookPage({ params }: EditBookProps) {
   }
 };
   return (
-    <div className="p-6 text-white">
-      <h1 className="text-3xl font-bold mb-6">Edit Book</h1>
-      <div className="space-y-4 max-w-lg">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white p-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-gray-800/50 backdrop-blur-md rounded-2xl border border-gray-700 p-8 shadow-xl">
+          <h1 className="text-3xl md:text-4xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+            Edit Book
+          </h1>
+          <div className="space-y-4 max-w-lg">
         <div className="flex flex-col">
           <label className="mb-1 font-semibold text-gray-300">Title</label>
           <input
@@ -304,14 +308,26 @@ export default function EditBookPage({ params }: EditBookProps) {
           </select>
         </div>
 
-        <button
-          onClick={handleUpdate}
-          disabled={loading}
-          className="px-6 py-3 bg-blue-600 rounded hover:bg-blue-700 mt-4"
-        >
-          {loading ? "Updating..." : "Update Book"}
-        </button>
+          <div className="mt-6 flex items-center gap-3">
+            <button
+              onClick={handleUpdate}
+              disabled={loading}
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-blue-500/25 disabled:opacity-50"
+            >
+              {loading ? "Updating..." : "Update Book"}
+            </button>
+
+            <button
+              onClick={() => router.push(`/books/${id}`)}
+              type="button"
+              className="px-5 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-xl border border-gray-600 transition-all duration-200"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
       </div>
+    </div>
     </div>
   );
 }
