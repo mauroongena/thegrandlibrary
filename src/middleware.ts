@@ -6,7 +6,6 @@ const adminRoutePatterns = [
   /^\/books\/[^/]+\/edit$/,
   /^\/admin\/loans/,
   /^\/users$/,
-  /^\/users\/[^/]+$/,
 ];
 
 export default withAuth(
@@ -24,6 +23,15 @@ export default withAuth(
     }
 
     if (req.nextauth.token.role === "USER") {
+      const userProfileMatch = pathname.match(/^\/users\/([^/]+)$/);
+      
+      if (userProfileMatch) {
+        const requestedUserId = userProfileMatch[1];
+        if (requestedUserId === req.nextauth.token.id) {
+          return NextResponse.next();
+        }
+      }
+
       const isAdminRoute = adminRoutePatterns.some((pattern) =>
         pattern.test(pathname)
       );

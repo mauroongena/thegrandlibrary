@@ -2,17 +2,27 @@ import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import SignOut from "./SignOut";
+import prisma from "@/lib/client";
 
 export default async function Navbar() {
   const session = await getServerSession(authOptions);
   const isAdmin = session?.role === "ADMIN";
+  
+  let userId = null;
+  if (session?.user?.email) {
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+      select: { id: true }
+    });
+    userId = user?.id;
+  }
 
   return (
     <nav className="bg-gray-900/80 backdrop-blur-md border-b border-gray-800 sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
         <Link
           href="/"
-          className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent"
+          className="text-2xl font-bold bg-linear-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent"
         >
           Your Library
         </Link>
@@ -46,6 +56,15 @@ export default async function Navbar() {
               className="hover:text-blue-400 transition-colors duration-200"
             >
               Wishlist
+            </Link>
+          )}
+
+           {session && userId && (
+            <Link
+              href={`/users/${userId}`}
+              className="hover:text-blue-400 transition-colors duration-200"
+            >
+              Profile
             </Link>
           )}
 

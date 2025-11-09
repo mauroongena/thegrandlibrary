@@ -30,6 +30,22 @@ export default function SearchBar() {
       >
         Search
       </button>
+      {query && (
+        <button
+          type="button"
+          onClick={() => {
+            setQuery("");
+            router.push("/books");
+          }}
+          className="px-4 py-2 bg-gray-700 hover:bg-gray-800 rounded-lg text-white font-semibold transition-all duration-300 flex items-center gap-2 border border-gray-600"
+          aria-label="Reset search"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          Reset
+        </button>
+      )}
     </form>
   );
 }

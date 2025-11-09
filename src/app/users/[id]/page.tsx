@@ -1,14 +1,34 @@
 import prisma from "@/lib/client";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 
 export default async function UserDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
+  const session = await getServerSession();
   const resolvedParams = await params;
   const { id } = resolvedParams;
+
+  if (!session || !session.user) {
+    redirect("/api/auth/signin");
+  }
+
+  const currentUser = await prisma.user.findUnique({
+    where: { email: session.user.email as string },
+    select: { id: true, role: true }
+  });
+
+  if (!currentUser) {
+    redirect("/api/auth/signin");
+  }
+
+  if (currentUser.role !== "ADMIN" && currentUser.id !== id) {
+    redirect("/");
+  }
+
   const user = await prisma.user.findUnique({
     where: { id: id },
     include: {
@@ -37,7 +57,7 @@ export default async function UserDetailPage({
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-4xl font-bold bg-linear-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-            User Profile
+            {currentUser.id === id ? "My Profile" : "User Profile"}
           </h1>
           <p className="text-gray-400 mt-2">{user.email}</p>
         </div>
@@ -88,12 +108,21 @@ export default async function UserDetailPage({
         </div>
 
         <div className="mt-8">
-          <Link
-            href="/users"
-            className="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-white transition-colors"
-          >
-            Back to Users List
-          </Link>
+          {currentUser.role === "ADMIN" ? (
+            <Link
+              href="/users"
+              className="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-white transition-colors"
+            >
+              Back to Users List
+            </Link>
+          ) : (
+            <Link
+              href="/"
+              className="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-white transition-colors"
+            >
+              Back to Home
+            </Link>
+          )}
         </div>
       </div>
     </div>
