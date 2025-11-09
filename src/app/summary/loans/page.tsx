@@ -34,72 +34,86 @@ export default async function MyLoansPage() {
   });
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-2xl font-semibold mb-4">My Loans</h1>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white p-6">
+      <div className="max-w-5xl mx-auto">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-8">
+          My Loans
+        </h1>
 
-      {loans.length === 0 ? (
-        <p className="text-gray-500">You have no active loans.</p>
-      ) : (
-        <div className="space-y-4">
-          {loans.map((loan) => {
-            const overdue =
-              loan.dueAt && new Date(loan.dueAt).getTime() < Date.now();
-            const dueIn = loan.dueAt
-              ? formatTimeUntil(new Date(loan.dueAt))
-              : "No due date";
+        {loans.length === 0 ? (
+          <p className="text-gray-400 text-lg">You have no active loans.</p>
+        ) : (
+          <div className="space-y-6">
+            {loans.map((loan) => {
+              const overdue =
+                loan.dueAt && new Date(loan.dueAt).getTime() < Date.now();
+              const dueIn = loan.dueAt
+                ? formatTimeUntil(new Date(loan.dueAt))
+                : "No due date";
 
-            const dueAt = loan.dueAt
-              ? new Date(loan.dueAt).toLocaleDateString("en-GB")
-              : "N/A";
+              const dueAt = loan.dueAt
+                ? new Date(loan.dueAt).toLocaleDateString("en-GB")
+                : "N/A";
 
-            return (
-              <div
-                key={loan.id}
-                className={`border rounded-xl p-4 shadow-sm ${
-                  overdue ? "border-red-500" : "border-gray-200"
-                }`}
-              >
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-4">
-                    {loan.book.image ? (
-                      <Image
-                        src={loan.book.image}
-                        alt={loan.book.title}
-                        width={80}
-                        height={120}
-                        className="object-cover rounded"
-                      />
-                    ) : (
-                      <div className="w-20 h-30 bg-gray-200 flex items-center justify-center text-sm text-gray-500 rounded">
-                        no image
+              return (
+                <div
+                  key={loan.id}
+                  className={`rounded-xl border p-6 backdrop-blur-sm shadow-lg transition-all duration-300 hover:shadow-blue-500/10 hover:-translate-y-1 ${
+                    overdue
+                      ? "border-red-500/50 bg-red-500/10"
+                      : "border-gray-700 bg-gray-800/40 hover:border-blue-500/40"
+                  }`}
+                >
+                  <div className="flex justify-between items-center gap-4">
+                    <div className="flex items-center gap-5">
+                      {loan.book.image ? (
+                        <div className="w-20 h-28 rounded-lg overflow-hidden border border-gray-700">
+                          <Image
+                            src={loan.book.image}
+                            alt={loan.book.title}
+                            width={80}
+                            height={110}
+                            className="object-cover w-full h-full"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-20 h-28 flex items-center justify-center text-sm text-gray-500 bg-gray-700 rounded-lg">
+                          No Image
+                        </div>
+                      )}
+
+                      <div>
+                        <h2 className="text-xl font-semibold text-blue-400">
+                          {loan.book.title}
+                        </h2>
+
+                        <p className="text-gray-400 text-sm mt-1">
+                          Due {dueIn}
+                          {overdue && (
+                            <span className="ml-2 text-red-500 font-semibold">
+                              • Overdue
+                            </span>
+                          )}
+                        </p>
                       </div>
-                    )}
+                    </div>
 
-                    <div>
-                      <h2 className="text-lg font-medium">{loan.book.title}</h2>
-                      <p className="text-sm text-gray-500">
-                        Due {dueIn}
-                        {overdue && (
-                          <span className="ml-2 text-red-600 font-semibold">
-                            ⚠️ Overdue – please return!
-                          </span>
-                        )}
-                      </p>
+                    <div className="flex flex-col items-end text-sm">
+                      <p className="text-gray-300">{dueAt}</p>
+
+                      {!overdue && !loan.extendedOnce && (
+                        <div className="mt-2">
+                          <ExtendLoanButton loanId={loan.id} />
+                        </div>
+                      )}
                     </div>
                   </div>
-
-                  <div className="flex flex-col items-end">
-                    <p>{dueAt}</p>
-                    {!overdue && !loan.extendedOnce && (
-                      <ExtendLoanButton loanId={loan.id} />
-                    )}
-                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

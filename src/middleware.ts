@@ -5,6 +5,8 @@ const adminRoutePatterns = [
   /^\/books\/new$/,
   /^\/books\/[^/]+\/edit$/,
   /^\/admin\/loans/,
+  /^\/users$/,
+  /^\/users\/[^/]+$/,
 ];
 
 export default withAuth(
@@ -39,5 +41,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/books/:path*", "/api/auth/:path*", "/admin/:path*"],
+  matcher: ["/books/:path*", "/api/auth/:path*", "/admin/:path*", "/users/:path*"],
 };

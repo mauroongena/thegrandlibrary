@@ -63,7 +63,16 @@ export default async function Navbar() {
               href="/admin/loans"
               className="hover:text-blue-400 transition-colors duration-200"
             >
-              Loans
+              New loan
+            </Link>
+          )}
+
+          {isAdmin && (
+            <Link
+              href="/users"
+              className="hover:text-blue-400 transition-colors duration-200"
+            >
+              Users
             </Link>
           )}
 
