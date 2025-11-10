@@ -85,4 +85,4 @@ The application will be available at `http://localhost:3000`
 
 ---
 
-*Built with ❤️ using Next.js 14 and Prisma*
+*Built by using Next.js 14 and Prisma*
